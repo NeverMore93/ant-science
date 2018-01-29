@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios/index';
 import { Box, Form, Layer, Tab, Tabs, Button } from 'grommet';
-import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
+import { TextField, Toggle } from 'material-ui';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export default class LoginLayer extends Component {
@@ -12,6 +11,12 @@ export default class LoginLayer extends Component {
   }
 
   componentWillMount() {
+    this.setState({
+      loginName: '',
+      loginPwd: '',
+      regName: '',
+      regPwd: ''
+    });
     axios.post('').then((response) => {
       console.log(response);
     });
@@ -29,6 +34,7 @@ export default class LoginLayer extends Component {
       });
   }
   postSetUp() {
+    const { onClose, loginName, loginPwd, regName, regPwd } = this.state;
     axios.post('', {
       setUpName: 'Fred',
       setUpPwd: 'Flintstone'
@@ -48,7 +54,7 @@ export default class LoginLayer extends Component {
   }
 
   render() {
-    const { onClose } = this.state;
+    const { onClose, loginName, loginPwd, regName, regPwd } = this.state;
     console.log(this.state);
     const style = { margin: '20' };
     return (
@@ -61,41 +67,23 @@ export default class LoginLayer extends Component {
                   this._onChang(event, isInputChecked);
                 }} />
                 <Form>
-                  <TextField
-                    name='login_name'
-                    hintText='用户名'
-                    floatingLabelText='请输入用户名'
-                    fullWidth={true}
-                    value={this.state.loginName}
-                  />
-                  <TextField
-                    name='login_pwd'
-                    hintText='密码'
-                    floatingLabelText='请输入密码'
-                    type='password'
-                    fullWidth={true}
-                    value={this.state.loginPwd}
-                  />
+                  <TextField name='loginName' floatingLabelText='请输入用户名、手机号或邮箱登录' fullWidth={true} value={loginName} onChange={(event, newValue) => {
+                    this._onChang(event, newValue);
+                  }} />
+                  <TextField name='loginPwd' floatingLabelText='请输入密码' type='password' fullWidth={true} value={loginPwd} onChange={(event, newValue) => {
+                    this._onChang(event, newValue);
+                  }} />
                 </Form>
                 <Button label='登录' type='submit' primary={true} onSubmit={this.postLogin()} style={{ marginRight: '5px', marginLeft: 'auto', display: 'inline-block' }} />
               </Tab>
               <Tab title='注册'>
                 <Form>
-                  <TextField
-                    name='setUp_name'
-                    hintText='昵称'
-                    floatingLabelText='请给自己设置昵称'
-                    fullWidth={true}
-                    value={this.state.setUpName}
-                  />
-                  <TextField
-                    name='setUp_pwd'
-                    hintText='密码'
-                    floatingLabelText='请设置密码'
-                    type='password'
-                    fullWidth={true}
-                    value={this.state.setUpPwd}
-                  />
+                  <TextField name='regName' floatingLabelText='请输入用户名、手机号或邮箱登录' fullWidth={true} value={regName} onChange={(event, newValue) => {
+                    this._onChang(event, newValue);
+                  }} />
+                  <TextField name='regPwd' floatingLabelText='请设置密码' type='password' fullWidth={true} value={regPwd} onChange={(event, newValue) => {
+                    this._onChang(event, newValue);
+                  }} />
                 </Form>
                 <Button label='注册' primary={true} type='submit' onSubmit={this.postSetUp()}style={{ marginRight: '5px', marginLeft: 'auto', display: 'inline-block' }} />
               </Tab>

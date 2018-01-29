@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-// import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 // import FlatButton from 'material-ui/FlatButton';
 import { pageLoaded } from './utils';
-import { Box, Card, Carousel } from 'grommet';
+import { Box,  Carousel } from 'grommet';
 import axios from 'axios';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class Home extends Component {
   constructor(props) {
@@ -31,18 +32,23 @@ class Home extends Component {
     }
     console.log(articles);
     const cards = articles.map((article,articleIndex)=>{
-      article.content && article.content.map((str,strIndex)=>{
-        return (
-          <Card label={article.title} />
-        );
-      });
+      return (
+        <MuiThemeProvider>
+          <Card>
+            <CardMedia overlay={<CardTitle title={article.title} />}>
+              <img src={article.content[0]} className='cardImg' />
+            </CardMedia>
+          </Card>
+        </MuiThemeProvider>
+      );
     });
 
     return (
-      <Box>
-        <Carousel>
+      <Box align='center'>
+        <Carousel className='carousel' id='carousel'>
           {cards}
         </Carousel>
+
       </Box>
     );
   }
