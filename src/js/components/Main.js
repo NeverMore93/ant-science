@@ -2,10 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LoginLayer from './LoginLayer';
-import App from 'grommet/components/App';
-
 import { navResponsive } from '../actions/nav';
-
 import Login from '../screens/Login';
 import Dashboard from '../screens/Dashboard';
 import Tasks from '../screens/Tasks';
@@ -16,7 +13,7 @@ import HeadeBar from './HeadeBar';
 import Essay from '../screens/Essay';
 import AddEssay from '../screens/AddEssay';
 
-import { Box } from 'grommet';
+import { Box, App } from 'grommet';
 
 class Main extends Component {
   constructor(props) {

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import Header from 'grommet/components/Header';
-import Anchor from 'grommet/components/Anchor';
-import { Box, Button, Search } from 'grommet';
+import { Box, Button, Search, Anchor, Header } from 'grommet';
 import SessionMenu from './SessionMenu';
-import AddIcon from 'grommet/components/icons/base/Add';
+import { AddIcon } from 'grommet/components/icons/base';
 
 
 class HeadeBar extends Component {
@@ -14,12 +12,8 @@ class HeadeBar extends Component {
     this.state = this.props;
   }
 
-  handleOnClick() {
-    this.setState({ redirect: true });
-  }
-
   render() {
-    const { nav: { items },  login } = this.state;
+    const { nav: { items }, login } = this.state;
     const SessionMenuStyle = { margin: '20' };
     const SearchStyle = { backgroundColor: '#ffffff' };
     const links = items.map(page => (

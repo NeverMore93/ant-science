@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-// import FlatButton from 'material-ui/FlatButton';
+import {Card, CardMedia, CardTitle } from 'material-ui/Card';
 import { pageLoaded } from './utils';
-import { Box,  Carousel } from 'grommet';
+import { Box, Carousel, Anchor, Image } from 'grommet';
 import axios from 'axios';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 
 class Home extends Component {
   constructor(props) {
@@ -14,29 +14,34 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    axios.post('http://39.104.87.44:8017/allArticle').then((response) => {
-      console.log(response);
+    axios.get('http://39.104.87.44:8017/auth/articles').then((response) => {
       this.setState({
-        articles:response.data
+        articles: response.data,
+        redirect: false,
+        path: ''
       });
     });
   }
   componentDidMount() {
     pageLoaded('Home');
   }
-
   render() {
-    const { articles } = this.state;
+    const { articles, redirect, path } = this.state;
+    console.log(this.state);
     if (!articles) {
       return null;
     }
-    console.log(articles);
-    const cards = articles.map((article,articleIndex)=>{
+    if (redirect) {
+      window.location = { path };
+    }
+    const cards = articles.map((article) => {
       return (
         <MuiThemeProvider>
-          <Card>
+          <Card onClick={() => {
+            window.location = `/article/${article.id}`;
+          }} >
             <CardMedia overlay={<CardTitle title={article.title} />}>
-              <img src={article.content[0]} className='cardImg' />
+              <Image src={article.content[0]} className='cardImg'/>
             </CardMedia>
           </Card>
         </MuiThemeProvider>
