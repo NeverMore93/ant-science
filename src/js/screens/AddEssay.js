@@ -20,12 +20,13 @@ export default class AddEssay extends Component {
     console.log(html);
   }
 
+
   render() {
     /* const BoxStyle = { width: '80%' }; */
     const titleStyle = { width: '40%', 'margin-left': '300px', 'margin-top': '10px' };
     const labelStyle = {
       'margin-left': '30px', 'font-family': '黑体', 'font-size': '20px', 'margin-bottom': '20px',
-      'font-weight': 'bold', 'margin-top': '120x'};
+      'font-weight': 'bold', 'margin-top': '120x' };
     const titleHintStyle = {
       'font-weight': 'bold', 'font-size': '30px', 'padding-top': '10px', 'padding-bottom': '10px' };
     const editorProps = {
@@ -33,7 +34,7 @@ export default class AddEssay extends Component {
       initialContent: this.state.content,
       onChange: this.handleChange,
       onHTMLChange: this.handleHTMLChange
-    }
+    };
     return (
       <div>
         <Label style={labelStyle}>写文章</Label>

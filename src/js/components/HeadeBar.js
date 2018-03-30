@@ -27,7 +27,9 @@ class HeadeBar extends Component {
           {links}
           <Search inline={true} fill={true} size='medium' placeHolder='输入想搜索的关键字' style={SearchStyle} />
           <SessionMenu ref={this.sessionMenu} login={login} style={SessionMenuStyle} />
-          <Button icon={<AddIcon />}  />
+          <Button icon={<AddIcon />} onClick={() => {
+            window.location = '/articleEditor';
+          }} />
         </Header>
       </Box>
 

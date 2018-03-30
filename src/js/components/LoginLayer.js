@@ -3,11 +3,14 @@ import axios from 'axios/index';
 import { Box, Form, Layer, Tab, Tabs, Button } from 'grommet';
 import { TextField, Toggle } from 'material-ui';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { connect } from 'react-redux';
 
-export default class LoginLayer extends Component {
+class LoginLayer extends Component {
   constructor(props) {
     super(props);
     this.state = this.props;
+    this._getVerifyCode = this._getVerifyCode.bind(this);
+    this._login = this._login.bind(this);
   }
 
   componentWillMount() {
@@ -17,34 +20,6 @@ export default class LoginLayer extends Component {
       regName: '',
       regPwd: ''
     });
-    axios.post('').then((response) => {
-      console.log(response);
-    });
-  }
-  postLogin() {
-    axios.post('', {
-      loginName: 'Fred',
-      loginPwd: 'Flintstone'
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  postSetUp() {
-    const { onClose, loginName, loginPwd, regName, regPwd } = this.state;
-    axios.post('', {
-      setUpName: 'Fred',
-      setUpPwd: 'Flintstone'
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }
 
   _onChang(event, value) {
@@ -53,13 +28,55 @@ export default class LoginLayer extends Component {
     });
   }
 
+  _login(){
+    const { isPhoneLogin, loginName, verifyCode } = this.state;
+    if (isPhoneLogin) {
+      // axios.get('http://39.104.87.44:8017/auth/verification/phone/'+loginName+'/code/'+verifyCode).then((response) => {
+      axios.get('http://localhost:8080/auth/verification/phone/'+loginName+'/code/'+verifyCode).then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          this.setState({
+            loginNameErrorText: '验证码发送失败'
+          });
+        } else {
+          this.setState({
+            loginNameErrorText: '验证码发送失败'
+          });
+        }
+      });
+    }
+  }
+
+  _getVerifyCode() {
+    const { loginName } = this.state;
+    if (loginName.trim().length !== 11) {
+      this.setState({
+        loginNameErrorText: '手机号码格式有误'
+      });
+    } else {
+      // axios.get('http://39.104.87.44:8017/auth/verification/phone/'+loginName).then((response) => {
+      axios.get('http://localhost:8080/auth/verification/phone/'+loginName).then((response) => {
+        console.log(response);
+        if (response.status !== 200) {
+          this.setState({
+            loginNameErrorText: '验证码发送失败'
+          });
+        } else {
+          const result = response.data;
+          this.setState({
+            loginNameErrorText: null
+          });
+        }
+      });
+    }
+  }
+
   render() {
-    const { onClose, loginName, loginPwd, regName, regPwd } = this.state;
+    const { onClose, loginName, loginPwd, regName, regPwd, isPhoneLogin, verifyCode, loginNameErrorText } = this.state;
     console.log(this.state);
-    const style = { margin: '20' };
     return (
-      <Layer align='center' closer={true} onClose={onClose}>
-        <Box style={style} >
+      <Layer align='center' closer={true} onClose={onClose} style={{ height: 'auto' }}>
+        <Box style={{ margin: '20' }} >
           <MuiThemeProvider>
             <Tabs>
               <Tab title='登录' >
@@ -67,14 +84,18 @@ export default class LoginLayer extends Component {
                   this._onChang(event, isInputChecked);
                 }} />
                 <Form>
-                  <TextField name='loginName' floatingLabelText='请输入用户名、手机号或邮箱登录' fullWidth={true} value={loginName} onChange={(event, newValue) => {
+                  <TextField name='loginName' floatingLabelText={(isPhoneLogin) ? '请输入手机号' : '请输入用户名、手机号或邮箱登录'} fullWidth={true} value={loginName} onChange={(event, newValue) => {
                     this._onChang(event, newValue);
-                  }} />
-                  <TextField name='loginPwd' floatingLabelText='请输入密码' type='password' fullWidth={true} value={loginPwd} onChange={(event, newValue) => {
-                    this._onChang(event, newValue);
-                  }} />
+                  }} errorText={loginNameErrorText} />
+                  {(isPhoneLogin) ? <Box direction='row'><TextField name='verifyCode' floatingLabelText='请输入验证码' value={verifyCode} onChange={(event, newValue) => {
+                  this._onChang(event, newValue);
+                }} /><Button plain={true} label='发送验证码' accent={true} onClick={this._getVerifyCode} /></Box>
+                    :
+                    <TextField name='loginPwd' floatingLabelText='请输入密码' type='password' fullWidth={true} value={loginPwd} onChange={(event, newValue) => {
+                      this._onChang(event, newValue);
+                      }} />}
                 </Form>
-                <Button label='登录' type='submit' primary={true} onSubmit={this.postLogin()} style={{ marginRight: '5px', marginLeft: 'auto', display: 'inline-block' }} />
+                <Button label='登录' type='submit' primary={true} style={{ marginRight: '5px', marginLeft: 'auto', display: 'inline-block' }} onClick={this._login} />
               </Tab>
               <Tab title='注册'>
                 <Form>
@@ -85,7 +106,7 @@ export default class LoginLayer extends Component {
                     this._onChang(event, newValue);
                   }} />
                 </Form>
-                <Button label='注册' primary={true} type='submit' onSubmit={this.postSetUp()}style={{ marginRight: '5px', marginLeft: 'auto', display: 'inline-block' }} />
+                <Button label='注册' primary={true} type='submit' style={{ marginRight: '5px', marginLeft: 'auto', marginTop: '10px', position: 'absolute' }} />
               </Tab>
             </Tabs>
           </MuiThemeProvider>
@@ -94,3 +115,8 @@ export default class LoginLayer extends Component {
     );
   }
 }
+
+const select = state => ({
+  session: state.session
+});
+export default connect(select)(LoginLayer);

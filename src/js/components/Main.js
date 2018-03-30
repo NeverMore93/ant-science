@@ -12,6 +12,8 @@ import Home from '../screens/Home';
 import HeadeBar from './HeadeBar';
 import Essay from '../screens/Essay';
 import AddEssay from '../screens/AddEssay';
+import About from '../screens/About';
+import ArticleEditor from '../screens/ArctileEditor';
 
 import { Box, App } from 'grommet';
 
@@ -55,6 +57,8 @@ class Main extends Component {
               <Route path='/tasks' component={Tasks} />
               <Route path='/article/:id' component={Essay} />
               <Route path='/addEssay' component={AddEssay} />
+              <Route path='/about' component={About} />
+              <Route path='/articleEditor' component={ArticleEditor} />
               <Route path='/*' component={NotFound} />
             </Switch>
             {showLogin && <LoginLayer onClose={onClose} />}

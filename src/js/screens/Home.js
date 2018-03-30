@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {Card, CardMedia, CardTitle } from 'material-ui/Card';
 import { pageLoaded } from './utils';
-import { Box, Carousel, Anchor, Image } from 'grommet';
+import { Box, Carousel, Anchor, Image, Heading, Label } from 'grommet';
 import axios from 'axios';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Link, withRouter, Redirect } from 'react-router-dom';
@@ -25,14 +25,12 @@ class Home extends Component {
   componentDidMount() {
     pageLoaded('Home');
   }
+
   render() {
-    const { articles, redirect, path } = this.state;
+    const { articles, path } = this.state;
     console.log(this.state);
     if (!articles) {
       return null;
-    }
-    if (redirect) {
-      window.location = { path };
     }
     const cards = articles.map((article) => {
       return (
@@ -48,12 +46,33 @@ class Home extends Component {
       );
     });
 
-    return (
-      <Box align='center'>
-        <Carousel className='carousel' id='carousel'>
-          {cards}
-        </Carousel>
+    const articleList  = articles.map((article) => {
+      console.log(article.content[1]);
+      if (!article.content[1]) {
+        return null;
+      }
+      return (
+        <Box style={{ border: '1px groove', width: 'fill', background: '#B0E0E6' }}>
+          <Label onClick={() => {
+            window.location = `/article/${article.id}`;
+          }}>
+            {article.title}
+          </Label>
+          <span>{article.content[1].substring(0,40)+'...'}</span>
+        </Box>
+      );
+    });
 
+    return (
+      <Box>
+        <Box align='center'>
+          <Carousel className='carousel' id='carousel'>
+            {cards}
+          </Carousel>
+        </Box>
+        <Box align='start' style={{marginTop: '20px',marginLeft: '20px'}}>
+          {articleList}
+        </Box>
       </Box>
     );
   }
